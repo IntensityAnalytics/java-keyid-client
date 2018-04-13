@@ -5,24 +5,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import okhttp3.Response;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class KeyIDServiceTest
 {
-    static String readFile(String path, Charset encoding) throws IOException
-    {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, encoding);
-    }
 
     @Test
     public void testGet() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         JsonObject data = new JsonObject();
@@ -35,7 +24,7 @@ public class KeyIDServiceTest
     @Test
     public void testPost() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         JsonObject data = new JsonObject();
@@ -49,7 +38,7 @@ public class KeyIDServiceTest
     @Test
     public void testTypingMistake() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         Response response = service.TypingMistake("jgtest1",
@@ -66,7 +55,7 @@ public class KeyIDServiceTest
     @Test
     public void testNonce() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         long TICKS_AT_EPOCH = 621355968000000000L;
@@ -80,7 +69,7 @@ public class KeyIDServiceTest
     @Test
     public void testRemoveToken() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         Response response = service.RemoveToken("jgtest@intensityanalytics.com", "").get();
@@ -94,7 +83,7 @@ public class KeyIDServiceTest
     @Test
     public void testSaveToken() throws Exception
     {
-        String license = readFile("license.txt", StandardCharsets.UTF_8);
+        String license = KeyIDTest.readFile("license.txt");
         KeyIDService service = new KeyIDService("https://keyidservices.tickstream.com", license,0);
 
         Response response = service.SaveToken("jgtest@intensityanalytics.com", "").get();
