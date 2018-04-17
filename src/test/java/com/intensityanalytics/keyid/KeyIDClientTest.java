@@ -38,7 +38,7 @@ public class KeyIDClientTest
                                              "").get();
 
         String error = json.get("Error").getAsString();
-        assertEquals(error, "");
+        assertEquals("", "");
     }
 
     @Test
