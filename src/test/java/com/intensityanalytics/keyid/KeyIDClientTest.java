@@ -83,4 +83,44 @@ public class KeyIDClientTest
         assertEquals(json.get("Confidence").getAsString(), "98");
         assertEquals(json.get("Fidelity").getAsString(), "96");
     }
+
+
+    @Test
+    public void testLoginPassiveEnrollmentBadData() throws Exception
+    {
+        String license = KeyIDTest.readFile("license.txt");
+
+        KeyIDSettings settings = new KeyIDSettings();
+        settings.setLicense(license);
+        settings.setUrl("http://keyidservices.tickstream.com");
+
+        KeyIDClient client = new KeyIDClient(settings);
+
+        client.RemoveProfile("javatest1","","").get();
+
+        JsonObject json = client.LoginPassiveEnrollment("javatest1",
+                                      "M7asMTM2MzMwNDSxMDQxMLY0AIKa0hpnnxo/n5oIMPR3AgA=",
+                                      "").get();
+        assertEquals(json.toString(), "{\"Error\":\"Profile cannot be updated, because of corrupt input data. See the error log for additional details.\",\"Match\":false,\"IsReady\":false,\"Confidence\":0,\"Fidelity\":0}" );
+    }
+
+    @Test
+    public void testSaveProfileBadData() throws Exception
+    {
+        String license = KeyIDTest.readFile("license.txt");
+
+        KeyIDSettings settings = new KeyIDSettings();
+        settings.setLicense(license);
+        settings.setUrl("http://keyidservices.tickstream.com");
+
+        KeyIDClient client = new KeyIDClient(settings);
+
+        client.RemoveProfile("javatest1","","").get();
+
+        JsonObject json = client.SaveProfile("javatest1",
+                                              "M7asMTM2MzMwNDSxMDQxMLY0AIKa0hpnnxo/n5oIMPR3AgA=",
+                                              "").get();
+
+        assertEquals(json.toString(), "{\"Error\":\"Profile cannot be updated, because of corrupt input data. See the error log for additional details.\"}");
+    }
 }
