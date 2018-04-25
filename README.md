@@ -4,7 +4,31 @@ A Java 8 library to allow you to peform second factor authentication using Inten
 
 ## Install
 
-Include the JAR file or use the Intensity Analytics public Maven repository. You will also need GSON to process results. 
+Include the JAR file or use the Intensity Analytics public Maven repository. You will also need GSON to process results.
+
+Maven pom.xml example:
+
+```
+<repositories>
+...
+    <repository>
+        <id>intensityanalytics-public</id>
+        <name>Intensity Analytics Public Release Repository</name>
+        <url>https://www.myget.org/F/intensityanalytics-public/maven/</url>
+    </repository>
+...
+</repositories>
+
+<dependencies>
+...
+    <dependency>
+        <groupId>com.intensityanalytics</groupId>
+        <artifactId>keyid</artifactId>
+        <version>1.3</version>
+    </dependency>
+...
+</dependencies>
+```
 
 ## Usage
 
