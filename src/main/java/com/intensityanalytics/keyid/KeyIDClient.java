@@ -230,9 +230,9 @@ public class KeyIDClient
         .thenCompose(data ->
          {
             // in base case that no profile exists save profile and return early
-            if (data.get("Error").getAsString().equals("EntityID does not exist.") ||
-                data.get("Error").getAsString().equals("The profile has too little data for a valid evaluation.") ||
-                data.get("Error").getAsString().equals("The entry varied so much from the model, no evaluation is possible."))
+            // in case that the profile has too little data or varies to much but the profile and the profile is not ready yet
+            // ugly expression
+            if (data.get("Error").getAsString().equals("EntityID does not exist."))
             {
                 return SaveProfile(entityID, tsData, sessionID)
                 .thenApply(saveData ->
@@ -244,8 +244,9 @@ public class KeyIDClient
                           evalData.addProperty("Error", "");
                           evalData.addProperty("Match", true);
                           evalData.addProperty("IsReady", false);
-                          evalData.addProperty("Confidence", 100.0);
-                          evalData.addProperty("Fidelity", 100.0);
+                          evalData.addProperty("Confidence", "100.0");
+                          evalData.addProperty("Fidelity", "100.0");
+                          evalData.addProperty("Profiles", "1");
                           return evalData;
                       }
                       // handle unsuccessful save
@@ -262,15 +263,18 @@ public class KeyIDClient
             }
 
             // if profile is not ready save profile and return early
-            if (data.get("Error").getAsString().equals("") && data.get("IsReady").getAsBoolean() == false)
+            if (data.get("IsReady").getAsBoolean() == false)
             {
                 return SaveProfile(entityID, tsData, sessionID)
                 .thenApply(saveData ->
                 {
                     // handle successful save
-                    if (saveData.get("Error").getAsString().equals(""))
+                    if (saveData.get("Error").getAsString().equals("") ||
+                        saveData.get("Error").getAsString().equals("The profile has too little data for a valid evaluation.") ||
+                        saveData.get("Error").getAsString().equals("The entry varied so much from the model, no evaluation is possible."))
                     {
                         JsonObject evalData = data;
+                        evalData.addProperty("Error", "");
                         evalData.addProperty("Match", true);
                         return evalData;
                     }

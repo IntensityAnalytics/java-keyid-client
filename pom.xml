@@ -26,6 +26,13 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>intensityanalytics-public</id>
+            <url>https://www.myget.org/F/intensityanalytics-public/maven/</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
