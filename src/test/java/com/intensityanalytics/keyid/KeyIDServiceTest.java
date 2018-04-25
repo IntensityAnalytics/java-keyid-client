@@ -7,7 +7,6 @@ import okhttp3.Response;
 
 public class KeyIDServiceTest
 {
-
     @Test
     public void testGet() throws Exception
     {

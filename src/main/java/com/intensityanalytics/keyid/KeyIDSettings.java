@@ -4,7 +4,6 @@ public class KeyIDSettings
 {
     private String license;
     private String url = "http://invalid.invalid";
-    private boolean passiveValidation = false;
     private boolean passiveEnrollment = false;
     private boolean customThreshold = false;
     private double thresholdConfidence = 70.0;
@@ -30,16 +29,6 @@ public class KeyIDSettings
     public void setUrl(String url)
     {
         this.url = url;
-    }
-
-    public boolean isPassiveValidation()
-    {
-        return passiveValidation;
-    }
-
-    public void setPassiveValidation(boolean passiveValidation)
-    {
-        this.passiveValidation = passiveValidation;
     }
 
     public boolean isPassiveEnrollment()

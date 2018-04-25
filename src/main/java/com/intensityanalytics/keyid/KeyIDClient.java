@@ -199,14 +199,8 @@ public class KeyIDClient
                    data.addProperty("Match", AlphaToBool(data.get("Match").getAsString()));
                    data.addProperty("IsReady", AlphaToBool(data.get("IsReady").getAsString()));
 
-                   // set match to true and return early if using passive validation
-                   if (settings.isPassiveValidation())
-                   {
-                       data.addProperty("Match", true);
-                       return data;
-                   }
                    // evaluate match value using custom threshold if enabled
-                   else if (settings.isCustomThreshold())
+                   if (settings.isCustomThreshold())
                    {
                        boolean evalResult = EvalThreshold(data.get("Confidence").getAsDouble(), data.get("Fidelity").getAsDouble());
                        data.addProperty("Match", evalResult);
@@ -224,7 +218,7 @@ public class KeyIDClient
      * @param sessionID Session identifier for logging purposes.
      * @return
      */
-    public CompletableFuture<JsonObject> LoginPassiveEnrollment(String entityID, String tsData, String sessionID)
+    public CompletableFuture<JsonObject> EvaluatePassiveEnrollment(String entityID, String tsData, String sessionID)
     {
         return EvaluateProfile(entityID, tsData, sessionID)
         .thenCompose(data ->
@@ -250,6 +244,7 @@ public class KeyIDClient
                           return evalData;
                       }
                       // handle unsuccessful save
+                      // todo change this to throwing an exception?
                       else
                       {
                           JsonObject evalData = saveData;
@@ -279,6 +274,7 @@ public class KeyIDClient
                         return evalData;
                     }
                     // handle unsuccessful save
+                    // todo change this to throwing an exception?
                     else
                     {
                         JsonObject evalData = saveData;
@@ -293,6 +289,21 @@ public class KeyIDClient
 
             return CompletableFuture.completedFuture(data);
          });
+    }
+
+    /**
+     * Courtesy function that choses normal evaluation or passive enrollment to simplify calling code.
+     * @param entityID Profile to evaluate.
+     * @param tsData Typing sample to evaluate and save.
+     * @param sessionID Session identifier for logging purposes.
+     * @return
+     */
+    public CompletableFuture<JsonObject> Login(String entityID, String tsData, String sessionID)
+    {
+        if(settings.isPassiveEnrollment())
+            return EvaluatePassiveEnrollment(entityID, tsData, sessionID);
+        else
+            return EvaluateProfile(entityID, tsData, sessionID);
     }
 
     /**
