@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.net.URLEncoder;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
 
 public class KeyIDService
 {
@@ -31,7 +32,9 @@ public class KeyIDService
     {
         this.url = url;
         this.license = license;
-        client = new OkHttpClient();
+        client = new OkHttpClient().newBuilder()
+                        .connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                        .build();
     }
 
     /**

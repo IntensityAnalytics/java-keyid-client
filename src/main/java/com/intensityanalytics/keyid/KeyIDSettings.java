@@ -8,8 +8,7 @@ public class KeyIDSettings
     private boolean customThreshold = false;
     private double thresholdConfidence = 70.0;
     private double thresholdFidelity = 70.0;
-    private int timeout = 0;
-    private boolean strictSSL = true;
+    private int timeout = 5000;
 
     public String getLicense()
     {
@@ -79,15 +78,5 @@ public class KeyIDSettings
     public void setTimeout(int timeout)
     {
         this.timeout = timeout;
-    }
-
-    public boolean isStrictSSL()
-    {
-        return strictSSL;
-    }
-
-    public void setStrictSSL(boolean strictSSL)
-    {
-        this.strictSSL = strictSSL;
     }
 }
