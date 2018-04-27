@@ -300,7 +300,7 @@ public class KeyIDClient
      */
     public CompletableFuture<JsonObject> Login(String entityID, String tsData, String sessionID)
     {
-        if(settings.isPassiveEnrollment())
+        if(settings.isLoginEnrollment())
             return EvaluatePassiveEnrollment(entityID, tsData, sessionID);
         else
             return EvaluateProfile(entityID, tsData, sessionID);

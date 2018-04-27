@@ -41,7 +41,7 @@ public class KeyIDClientTest
         String license = KeyIDTest.readFile("license.txt");
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setPassiveEnrollment(true);
+        settings.setLoginEnrollment(true);
         settings.setUrl("http://keyidservices.tickstream.com");
         KeyIDClient client = new KeyIDClient(settings);
 
@@ -64,7 +64,7 @@ public class KeyIDClientTest
         String license = KeyIDTest.readFile("license.txt");
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setPassiveEnrollment(true);
+        settings.setLoginEnrollment(true);
         settings.setUrl("http://keyidservices.tickstream.com");
         KeyIDClient client = new KeyIDClient(settings);
 
@@ -99,7 +99,7 @@ public class KeyIDClientTest
         String license = KeyIDTest.readFile("license.txt");
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setPassiveEnrollment(true);
+        settings.setLoginEnrollment(true);
         settings.setUrl("http://keyidservices.tickstream.com");
         KeyIDClient client = new KeyIDClient(settings);
 

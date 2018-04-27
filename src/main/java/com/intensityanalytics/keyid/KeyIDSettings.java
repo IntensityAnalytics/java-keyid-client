@@ -4,7 +4,7 @@ public class KeyIDSettings
 {
     private String license;
     private String url = "http://invalid.invalid";
-    private boolean passiveEnrollment = false;
+    private boolean loginEnrollment = false;
     private boolean customThreshold = false;
     private double thresholdConfidence = 70.0;
     private double thresholdFidelity = 70.0;
@@ -30,14 +30,13 @@ public class KeyIDSettings
         this.url = url;
     }
 
-    public boolean isPassiveEnrollment()
+    public boolean isLoginEnrollment()
     {
-        return passiveEnrollment;
+        return loginEnrollment;
     }
 
-    public void setPassiveEnrollment(boolean passiveEnrollment)
-    {
-        this.passiveEnrollment = passiveEnrollment;
+    public void setLoginEnrollment(boolean passiveEnrollment)    {
+        this.loginEnrollment = passiveEnrollment;
     }
 
     public boolean isCustomThreshold()
