@@ -234,13 +234,13 @@ public class KeyIDClient
                       // handle successful save
                       if (saveData.get("Error").getAsString().equals(""))
                       {
-                          JsonObject evalData = data;
+                          JsonObject evalData = new JsonObject();
                           evalData.addProperty("Error", "");
                           evalData.addProperty("Match", true);
                           evalData.addProperty("IsReady", false);
                           evalData.addProperty("Confidence", "100.0");
                           evalData.addProperty("Fidelity", "100.0");
-                          evalData.addProperty("Profiles", "1");
+                          evalData.addProperty("Profiles", "0");
                           return evalData;
                       }
                       // handle unsuccessful save
@@ -268,7 +268,7 @@ public class KeyIDClient
                         saveData.get("Error").getAsString().equals("The profile has too little data for a valid evaluation.") ||
                         saveData.get("Error").getAsString().equals("The entry varied so much from the model, no evaluation is possible."))
                     {
-                        JsonObject evalData = data;
+                        JsonObject evalData = saveData;
                         evalData.addProperty("Error", "");
                         evalData.addProperty("Match", true);
                         return evalData;
