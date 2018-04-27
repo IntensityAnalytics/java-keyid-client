@@ -240,7 +240,7 @@ public class KeyIDClient
                           evalData.addProperty("IsReady", false);
                           evalData.addProperty("Confidence", "100.0");
                           evalData.addProperty("Fidelity", "100.0");
-                          evalData.addProperty("Profiles", "0");
+                          evalData.addProperty("Profiles", "1");
                           return evalData;
                       }
                       // handle unsuccessful save
