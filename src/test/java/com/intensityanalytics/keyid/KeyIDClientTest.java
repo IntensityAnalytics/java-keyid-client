@@ -5,13 +5,17 @@ import static org.junit.Assert.*;
 
 public class KeyIDClientTest
 {
+    private static final String serverAddress = "http://keyidservicesvm.tickstream.com";
+    private static final String licenseFile = "license.txt";
     @Test
     public void testSaveProfile() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        
+        
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         client.RemoveProfile("javatest1","","").get();
@@ -23,10 +27,10 @@ public class KeyIDClientTest
     @Test
     public void testRemoveProfile() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         JsonObject json = client.RemoveProfile("javatest1", "hZK7bcRADERrcQcc/hlfejAcugAX4MTZFu+1o+OKgKBAycM8DUfBy8UlCxTqABmXrK/1eK735/r8fz4ebyCduO+Tix5XhUCsnxPzesUYHmw5WdG5CE69Wo+4dAmqqzX8FRMxCvhkzc75fk1de1xlmdxaNVlRcWvVgirXndUUpsWDtZ3E9xYx7gp0LpEZg7XFBbGq09WqHdtFSfRqPTCmIBsObNQwy73/0OHECqk5pLWmya4hGNIOLNR4OIi1Hz3N937DqieWgA6j9oNk0Kbyet7eNEv+2g5Yq1C7KUgGrH1bGfavZBfsFw==", "").get();
@@ -37,11 +41,11 @@ public class KeyIDClientTest
     @Test
     public void testLoginPassiveEnrollment() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
         settings.setLoginEnrollment(true);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         client.RemoveProfile("javatest1","","").get();
@@ -60,11 +64,11 @@ public class KeyIDClientTest
     @Test
     public void testLoginPassiveEnrollment1() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
         settings.setLoginEnrollment(true);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         client.RemoveProfile("javatest1","","").get();
@@ -95,11 +99,11 @@ public class KeyIDClientTest
     @Test
     public void testLoginPassiveEnrollmentBadData() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
         settings.setLoginEnrollment(true);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         client.RemoveProfile("javatest1","","").get();
@@ -114,10 +118,10 @@ public class KeyIDClientTest
     @Test
     public void testSaveProfileBadData() throws Exception
     {
-        String license = KeyIDTest.readFile("license.txt");
+        String license = KeyIDTest.readFile(licenseFile);
         KeyIDSettings settings = new KeyIDSettings();
         settings.setLicense(license);
-        settings.setUrl("http://keyidservices.tickstream.com");
+        settings.setUrl(serverAddress);
         KeyIDClient client = new KeyIDClient(settings);
 
         client.RemoveProfile("javatest1","","").get();
