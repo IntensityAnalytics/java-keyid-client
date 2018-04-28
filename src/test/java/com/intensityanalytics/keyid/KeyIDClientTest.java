@@ -13,11 +13,11 @@ public class KeyIDClientTest
         settings.setLicense(license);
         settings.setUrl("http://keyidservices.tickstream.com");
         KeyIDClient client = new KeyIDClient(settings);
+
         client.RemoveProfile("javatest1","","").get();
         JsonObject json = client.SaveProfile("javatest1", "hZK7bcRADERrcQcc/hlfejAcugAX4MTZFu+1o+OKgKBAycM8DUfBy8UlCxTqABmXrK/1eK735/r8fz4ebyCduO+Tix5XhUCsnxPzesUYHmw5WdG5CE69Wo+4dAmqqzX8FRMxCvhkzc75fk1de1xlmdxaNVlRcWvVgirXndUUpsWDtZ3E9xYx7gp0LpEZg7XFBbGq09WqHdtFSfRqPTCmIBsObNQwy73/0OHECqk5pLWmya4hGNIOLNR4OIi1Hz3N937DqieWgA6j9oNk0Kbyet7eNEv+2g5Yq1C7KUgGrH1bGfavZBfsFw==", "").get();
-        String error = json.get("Error").getAsString();
 
-        assertEquals(error, "");
+        assertEquals("", json.get("Error").getAsString());
     }
 
     @Test
@@ -30,7 +30,6 @@ public class KeyIDClientTest
         KeyIDClient client = new KeyIDClient(settings);
 
         JsonObject json = client.RemoveProfile("javatest1", "hZK7bcRADERrcQcc/hlfejAcugAX4MTZFu+1o+OKgKBAycM8DUfBy8UlCxTqABmXrK/1eK735/r8fz4ebyCduO+Tix5XhUCsnxPzesUYHmw5WdG5CE69Wo+4dAmqqzX8FRMxCvhkzc75fk1de1xlmdxaNVlRcWvVgirXndUUpsWDtZ3E9xYx7gp0LpEZg7XFBbGq09WqHdtFSfRqPTCmIBsObNQwy73/0OHECqk5pLWmya4hGNIOLNR4OIi1Hz3N937DqieWgA6j9oNk0Kbyet7eNEv+2g5Yq1C7KUgGrH1bGfavZBfsFw==", "").get();
-        String error = json.get("Error").getAsString();
 
         assertEquals("", "");
     }
@@ -54,8 +53,8 @@ public class KeyIDClientTest
         client.Login("javatest1","hZK7bYMxDIRnyQY8vlm7NYKUGSADpEmn4S24Mi0iP1QIAj7c8agLXi4uWUzGCrNQpfWzbvf1eV/fz/N1+wBp5zzYaP2+c16vGAtDeZRD57Yi+SkXbTrWDAtaf/+7CqJIByy8Yb5viWm4bFwQk+cwXJNTDZb0K1djV2a/dDUhFb50taxknrK2lXi67ufgCkzc4apNLtQgU01m7MzQsd05Njkz7IK9YEkB+PBfM3aYWkuaVsCu16nWMSegdFBrzcxyuGJQe8PCQ+xqvUWM1KFKPWkhWbbaibUIpSUY19tmq4RU5YE9AA==","").get();
         JsonObject json = client.EvaluateProfile("javatest1", "hZK7bcRADERrcQcc/hlfejAcugAX4MTZFu+1o+OKgKBAycM8DUfBy8UlCxTqABmXrK/1eK735/r8fz4ebyCduO+Tix5XhUCsnxPzesUYHmw5WdG5CE69Wo+4dAmqqzX8FRMxCvhkzc75fk1de1xlmdxaNVlRcWvVgirXndUUpsWDtZ3E9xYx7gp0LpEZg7XFBbGq09WqHdtFSfRqPTCmIBsObNQwy73/0OHECqk5pLWmya4hGNIOLNR4OIi1Hz3N937DqieWgA6j9oNk0Kbyet7eNEv+2g5Yq1C7KUgGrH1bGfavZBfsFw==", "").get();
 
-        assertEquals(json.get("Confidence").getAsString(), "98");
-        assertEquals(json.get("Fidelity").getAsString(), "96");
+        assertEquals("98", json.get("Confidence").getAsString());
+        assertEquals("96", json.get("Fidelity").getAsString());
     }
 
     @Test
@@ -87,9 +86,9 @@ public class KeyIDClientTest
         client.Login("javatest1", "jdGxDQMhDAXQWbKBwWDjNmlPSZsBMkCa6xj+TqdEAmwLoH3y/wbESkgEQUhQMEY4T/3Ux1afW31f93W/ocm+iqWWJQjONJPpadgzudiuWO5YASfUZJMVcsoroZlhhRHjSrc/0906xtF7EGpZQe9PB+aFcsskeCsMLDnTulCJ3ruVjjE7oSabrVDiPPSs//sFzaRlAcnpNjC72wE=","").get();
         JsonObject json = client.EvaluateProfile("javatest1", "jdJBEsIgDAXQs3gDQkggW912dOsBPIAbdxzeTh1HUvgV2L7Jz6dlrsqqgUyFjHMM66mPelnqdan37d7OJ94x3tjzmKX0Ya+OJcc0gNAdIxAqLZMoYNqQ9dNcqJQAKrhpSjTFzGZ2+7I/TbOi3bRlRdDzDlkfmltmjCp4ltA09SyDCuXH1l+SUOiQHVZYWZwLNfRNrWVUFOw2ZP1ujkUZh74B", "").get();
 
-        assertEquals(json.get("Confidence").getAsString(), "98");
-        assertEquals(json.get("Fidelity").getAsString(), "72");
-        assertEquals(json.get("Profiles").getAsString(), "15");
+        assertEquals("98", json.get("Confidence").getAsString());
+        assertEquals("72", json.get("Fidelity").getAsString());
+        assertEquals("15", json.get("Profiles").getAsString());
     }
 
 
@@ -106,7 +105,10 @@ public class KeyIDClientTest
         client.RemoveProfile("javatest1","","").get();
         JsonObject json = client.Login("javatest1","M7asMTM2MzMwNDSxMDQxMLY0AIKa0hpnnxo/n5oIMPR3AgA=","").get();
 
-        assertEquals(json.toString(), "{\"Error\":\"Profile cannot be updated, because of corrupt input data. See the error log for additional details.\",\"Match\":false,\"IsReady\":false,\"Confidence\":0,\"Fidelity\":0}" );
+        assertEquals("Error saving profile.", json.get("Error").getAsString());
+        assertEquals("0", json.get("Confidence").getAsString());
+        assertEquals("0", json.get("Fidelity").getAsString());
+        assertEquals(false, json.get("Match").getAsBoolean());
     }
 
     @Test
@@ -121,6 +123,6 @@ public class KeyIDClientTest
         client.RemoveProfile("javatest1","","").get();
         JsonObject json = client.SaveProfile("javatest1","M7asMTM2MzMwNDSxMDQxMLY0AIKa0hpnnxo/n5oIMPR3AgA=","").get();
 
-        assertEquals(json.toString(), "{\"Error\":\"Profile cannot be updated, because of corrupt input data. See the error log for additional details.\"}");
+        assertEquals("{\"Error\":\"Profile cannot be updated, because of corrupt input data. See the error log for additional details.\"}", json.toString());
     }
 }

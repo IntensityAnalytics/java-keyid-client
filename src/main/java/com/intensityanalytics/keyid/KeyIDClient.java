@@ -218,75 +218,110 @@ public class KeyIDClient
      * @param sessionID Session identifier for logging purposes.
      * @return
      */
-    public CompletableFuture<JsonObject> EvaluatePassiveEnrollment(String entityID, String tsData, String sessionID)
+    public CompletableFuture<JsonObject> EvaluateEnrollProfile(String entityID, String tsData, String sessionID)
     {
+        // this function is so ugly it should be framed
         return EvaluateProfile(entityID, tsData, sessionID)
         .thenCompose(data ->
          {
             // in base case that no profile exists save profile and return early
-            // in case that the profile has too little data or varies to much but the profile and the profile is not ready yet
-            // ugly expression
             if (data.get("Error").getAsString().equals("EntityID does not exist."))
             {
                 return SaveProfile(entityID, tsData, sessionID)
                 .thenApply(saveData ->
                    {
+                      JsonObject evalData = new JsonObject();
+
                       // handle successful save
                       if (saveData.get("Error").getAsString().equals(""))
                       {
-                          JsonObject evalData = new JsonObject();
                           evalData.addProperty("Error", "");
                           evalData.addProperty("Match", true);
                           evalData.addProperty("IsReady", false);
                           evalData.addProperty("Confidence", "100.0");
                           evalData.addProperty("Fidelity", "100.0");
-                          evalData.addProperty("Profiles", "1");
-                          return evalData;
+                          evalData.addProperty("Profiles", "0");
                       }
                       // handle unsuccessful save
-                      // todo change this to throwing an exception?
                       else
                       {
-                          JsonObject evalData = saveData;
+                          evalData.addProperty("Error", "Error saving profile.");
                           evalData.addProperty("Match", false);
                           evalData.addProperty("IsReady", false);
-                          evalData.addProperty("Confidence", 0);
-                          evalData.addProperty("Fidelity", 0);
-                          return evalData;
+                          evalData.addProperty("Confidence", "0");
+                          evalData.addProperty("Fidelity", "0");
+                          evalData.addProperty("Profiles", "0");
                       }
+
+                      return evalData;
                    });
             }
 
             // if profile is not ready save profile and return early
             if (data.get("IsReady").getAsBoolean() == false)
             {
-                return SaveProfile(entityID, tsData, sessionID)
-                .thenApply(saveData ->
+                // profile is not ready and evaluation is free of error
+                if (data.get("Error").getAsString().equals(""))
                 {
-                    // handle successful save
-                    if (saveData.get("Error").getAsString().equals("") ||
-                        saveData.get("Error").getAsString().equals("The profile has too little data for a valid evaluation.") ||
-                        saveData.get("Error").getAsString().equals("The entry varied so much from the model, no evaluation is possible."))
-                    {
-                        JsonObject evalData = saveData;
-                        evalData.addProperty("Error", "");
-                        evalData.addProperty("Match", true);
-                        return evalData;
-                    }
-                    // handle unsuccessful save
-                    // todo change this to throwing an exception?
-                    else
-                    {
-                        JsonObject evalData = saveData;
-                        evalData.addProperty("Match", false);
-                        evalData.addProperty("IsReady", false);
-                        evalData.addProperty("Confidence", 0);
-                        evalData.addProperty("Fidelity", 0);
-                        return evalData;
-                    }
-                });
+                    return SaveProfile(entityID, tsData, sessionID)
+                    .thenApply(saveData ->
+                       {
+                           JsonObject evalData = data;
+
+                           // handle successful save
+                           if (saveData.get("Error").getAsString().equals(""))
+                           {
+                               evalData.addProperty("Error", "");
+                               evalData.addProperty("Match", true);
+                           }
+                           // handle unsuccessful save
+                           else
+                           {
+                               evalData.addProperty("Error", "Error saving profile.");
+                               evalData.addProperty("Match", false);
+                               evalData.addProperty("IsReady", false);
+                               evalData.addProperty("Confidence", "0");
+                               evalData.addProperty("Fidelity", "0");
+                               evalData.addProperty("Profiles", "0");
+                           }
+
+                           return evalData;
+                       });
+                }
+                // profile is not ready and evaluation returns one of two expected errors
+                else if (data.get("Error").getAsString().equals("The profile has too little data for a valid evaluation.") ||
+                         data.get("Error").getAsString().equals("The entry varied so much from the model, no evaluation is possible."))
+                {
+                    return SaveProfile(entityID, tsData, sessionID)
+                    .thenApply(saveData ->
+                       {
+                           JsonObject evalData = data;
+
+                           // handle successful save
+                           if (saveData.get("Error").getAsString().equals(""))
+                           {
+                               evalData.addProperty("Error", "");
+                               evalData.addProperty("Match", true);
+                               evalData.addProperty("Confidence", "100.0");
+                               evalData.addProperty("Fidelity", "100.0");
+                           }
+                           // handle unsuccessful save
+                           else
+                           {
+                               evalData.addProperty("Error", "Error saving profile.");
+                               evalData.addProperty("Match", false);
+                               evalData.addProperty("IsReady", false);
+                               evalData.addProperty("Confidence", "0");
+                               evalData.addProperty("Fidelity", "0");
+                               evalData.addProperty("Profiles", "0");
+                           }
+
+                           return evalData;
+                       });
+                }
             }
 
+            // return normal evaluation
             return CompletableFuture.completedFuture(data);
          });
     }
@@ -301,7 +336,7 @@ public class KeyIDClient
     public CompletableFuture<JsonObject> Login(String entityID, String tsData, String sessionID)
     {
         if(settings.isLoginEnrollment())
-            return EvaluatePassiveEnrollment(entityID, tsData, sessionID);
+            return EvaluateEnrollProfile(entityID, tsData, sessionID);
         else
             return EvaluateProfile(entityID, tsData, sessionID);
     }
