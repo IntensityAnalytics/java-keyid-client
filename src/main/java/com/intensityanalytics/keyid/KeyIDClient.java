@@ -230,30 +230,19 @@ public class KeyIDClient
                 return SaveProfile(entityID, tsData, sessionID)
                 .thenApply(saveData ->
                    {
-                      JsonObject evalData = new JsonObject();
-
-                      // handle successful save
                       if (saveData.get("Error").getAsString().equals(""))
                       {
+                          JsonObject evalData = new JsonObject();
                           evalData.addProperty("Error", "");
                           evalData.addProperty("Match", true);
                           evalData.addProperty("IsReady", false);
                           evalData.addProperty("Confidence", "100.0");
                           evalData.addProperty("Fidelity", "100.0");
                           evalData.addProperty("Profiles", "0");
+                          return evalData;
                       }
-                      // handle unsuccessful save
                       else
-                      {
-                          evalData.addProperty("Error", "Error saving profile.");
-                          evalData.addProperty("Match", false);
-                          evalData.addProperty("IsReady", false);
-                          evalData.addProperty("Confidence", "0");
-                          evalData.addProperty("Fidelity", "0");
-                          evalData.addProperty("Profiles", "0");
-                      }
-
-                      return evalData;
+                          return SaveErrorResult();
                    });
             }
 
@@ -266,26 +255,15 @@ public class KeyIDClient
                     return SaveProfile(entityID, tsData, sessionID)
                     .thenApply(saveData ->
                        {
-                           JsonObject evalData = data;
-
-                           // handle successful save
                            if (saveData.get("Error").getAsString().equals(""))
                            {
+                               JsonObject evalData = data;
                                evalData.addProperty("Error", "");
                                evalData.addProperty("Match", true);
+                               return evalData;
                            }
-                           // handle unsuccessful save
                            else
-                           {
-                               evalData.addProperty("Error", "Error saving profile.");
-                               evalData.addProperty("Match", false);
-                               evalData.addProperty("IsReady", false);
-                               evalData.addProperty("Confidence", "0");
-                               evalData.addProperty("Fidelity", "0");
-                               evalData.addProperty("Profiles", "0");
-                           }
-
-                           return evalData;
+                                return SaveErrorResult();
                        });
                 }
                 // profile is not ready and evaluation returns one of two expected errors
@@ -295,28 +273,17 @@ public class KeyIDClient
                     return SaveProfile(entityID, tsData, sessionID)
                     .thenApply(saveData ->
                        {
-                           JsonObject evalData = data;
-
-                           // handle successful save
                            if (saveData.get("Error").getAsString().equals(""))
                            {
+                               JsonObject evalData = data;
                                evalData.addProperty("Error", "");
                                evalData.addProperty("Match", true);
                                evalData.addProperty("Confidence", "100.0");
                                evalData.addProperty("Fidelity", "100.0");
+                               return evalData;
                            }
-                           // handle unsuccessful save
                            else
-                           {
-                               evalData.addProperty("Error", "Error saving profile.");
-                               evalData.addProperty("Match", false);
-                               evalData.addProperty("IsReady", false);
-                               evalData.addProperty("Confidence", "0");
-                               evalData.addProperty("Fidelity", "0");
-                               evalData.addProperty("Profiles", "0");
-                           }
-
-                           return evalData;
+                               return SaveErrorResult();
                        });
                 }
             }
@@ -324,6 +291,21 @@ public class KeyIDClient
             // return normal evaluation
             return CompletableFuture.completedFuture(data);
          });
+    }
+
+    /**
+     * JSON Object to return when saving a profile is encountered.
+     */
+    private JsonObject SaveErrorResult()
+    {
+        JsonObject result = new JsonObject();
+        result.addProperty("Error", "Error saving profile.");
+        result.addProperty("Match", false);
+        result.addProperty("IsReady", false);
+        result.addProperty("Confidence", "0");
+        result.addProperty("Fidelity", "0");
+        result.addProperty("Profiles", "0");
+        return result;
     }
 
     /**
@@ -349,19 +331,19 @@ public class KeyIDClient
     public CompletableFuture<JsonObject> GetProfileInfo(String entityID)
     {
         return service.GetProfileInfo(entityID)
-        .thenCompose(response ->
+        .thenApply(response ->
          {
              JsonObject data;
              try
              {
-                 data = ParseGetProfileResponse(response);
+                 data = ParseResponse(response);
              }
              catch (Exception e)
              {
                  throw new CompletionException(e);
              }
 
-             return CompletableFuture.completedFuture(data);
+             return data;
          });
     }
 
@@ -371,42 +353,24 @@ public class KeyIDClient
      * @return JSON value
      * @throws Exception
      */
-    JsonObject ParseResponse(Response response) throws Exception
+    private JsonObject ParseResponse(Response response) throws Exception
     {
-        if (response.code() == 200)
-        {
-            String body = response.body().string();
-            JsonObject obj = new JsonParser().parse(body).getAsJsonObject();
-            return obj;
-        }
-        else
-        {
-            throw new Exception("HTTP response not 200 OK.");
-        }
-    }
+        if (response.code() != 200)
+            throw new Exception("HTTP response error: " + response.code());
 
-    /**
-     * Extracts a JSON value from the GetProfile() http_response
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    JsonObject ParseGetProfileResponse(Response response) throws Exception
-    {
-        if (response.code() == 200)
-        {
-            String body = response.body().string();
-            JsonObject obj = new JsonParser().parse(body).getAsJsonObject();
+        String body = response.body().string();
+        JsonObject obj;
 
-            if (obj.isJsonArray())
-                return obj.getAsJsonArray().get(0).getAsJsonObject();
-
-            return obj;
-        }
-        else
+        try
         {
-            throw new Exception("HTTP response not 200 OK.");
+            obj = new JsonParser().parse(body).getAsJsonObject();
         }
+        catch (IllegalStateException e)
+        {
+            obj = new JsonParser().parse(body).getAsJsonArray().get(0).getAsJsonObject();
+        }
+
+        return obj;
     }
 
     /**
